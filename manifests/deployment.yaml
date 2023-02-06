@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiber-app
+  namespace: app-development
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      name: fiber-app
+  template:
+    metadata:
+      labels:
+        name: fiber-app
+    spec:
+      containers:
+        - name: application
+          image: metinagaoglu/go-fiber-sample:1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
