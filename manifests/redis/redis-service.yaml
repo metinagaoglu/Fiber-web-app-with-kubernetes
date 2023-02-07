@@ -6,6 +6,8 @@ metadata:
     app: deployment-redis
   name: svc-redis
 spec:
+  type: ExternalName
+  externalName: redis.redis-cluster.svc.cluster.local
   ports:
     - port: 6379
       targetPort: 6379

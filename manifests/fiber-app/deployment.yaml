@@ -16,7 +16,10 @@ spec:
     spec:
       containers:
         - name: application
-          image: metinagaoglu/go-fiber-sample:1.1
+          image: metinagaoglu/go-fiber-sample:1.2
+          env:
+            - name: REDIS_HOST
+              value: "svc-redis.redis-cluster.svc.cluster.local:6379"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

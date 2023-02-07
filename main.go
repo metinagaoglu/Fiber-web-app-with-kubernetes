@@ -7,12 +7,13 @@ import (
 	"log"
 	"net"
 	"time"
+	"os"
 )
 
 func connectRedis() *redis.Client {
 	// new redis client
 	client := redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
+		Addr:     os.Getenv("REDIS_HOST"),
 		Password: "",
 	})
 
@@ -32,7 +33,7 @@ func main() {
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		log.Println("[GET] - /")
-		err := rdb.Set("app", "up", 2*time.Second).Err()
+		err := rdb.Set("app", "up", 10*time.Second).Err()
 		if err != nil {
 			panic(err)
 		}
