@@ -14,7 +14,7 @@ func connectRedis() *redis.Client {
 	// new redis client
 	client := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_HOST"),
-		Password: "",
+		Password: ""
 	})
 
 	// test connection
