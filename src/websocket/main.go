@@ -3,25 +3,20 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
+	. "go-apps-with-kubernetes/libs"
 )
 
-// JSON-RPC request and response structs
-type jsonRPCRequest struct {
-	Method string          `json:"method"`
-	Params json.RawMessage `json:"params"`
-	ID     uint64          `json:"id"`
-}
-
-type jsonRPCResponse struct {
-	ID     uint64          `json:"id"`
-	Result json.RawMessage `json:"result"`
-	Error  interface{}     `json:"error"`
+// declaring a struct
+type Message struct {
+	// defining struct variables
+	Chat string
 }
 
 // Upgrader to upgrade incoming HTTP requests to websocket connections
@@ -32,30 +27,27 @@ var upgrader = websocket.Upgrader{
 }
 
 // handleRPCRequest is a helper function to handle incoming JSON-RPC requests
-func handleRPCRequest(ctx context.Context, wg *sync.WaitGroup, conn *websocket.Conn, request jsonRPCRequest) {
+func handleRPCRequest(ctx context.Context, wg *sync.WaitGroup, conn *WebsocketConn, request JsonRPCRequest) {
 	defer wg.Done()
 
-	//TODO: build controllers for this routing
+	//TODO: better way to handle this
 	switch request.Method {
-	case "example_method":
+	case "message":
 		var params map[string]interface{}
 		if err := json.Unmarshal(request.Params, &params); err != nil {
 			log.Println("Error decoding JSON-RPC params:", err)
 			return
 		}
 
+		var data Message
+		json.Unmarshal(request.Params, &data)
+
 		// Do something with the decoded params
-		response := jsonRPCResponse{
-			ID:     request.ID,
-			Result: json.RawMessage(`{"example_result": "Success"}`),
-		}
-		if err := conn.WriteJSON(response); err != nil {
-			log.Println("Error writing JSON-RPC response:", err)
-			return
-		}
+		conn.BroadcastExceptOne(ResponseBuilder(request.ID, json.RawMessage(fmt.Sprintf(`{"message": "%s"}`, data.Chat))))
+
 	case "sleep":
 		time.Sleep(8 * time.Second)
-		response := jsonRPCResponse{
+		response := JsonRPCResponse{
 			ID:     request.ID,
 			Result: json.RawMessage(`{"sleep": "Success"}`),
 		}
@@ -66,7 +58,7 @@ func handleRPCRequest(ctx context.Context, wg *sync.WaitGroup, conn *websocket.C
 	default:
 		log.Println("Received unsupported JSON-RPC method:", request.Method)
 		// Do something with the decoded params
-		response := jsonRPCResponse{
+		response := JsonRPCResponse{
 			ID:     request.ID,
 			Result: json.RawMessage(`{"example_result": " unsupported JSON-RPC method"}`),
 		}
@@ -84,7 +76,9 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error upgrading HTTP connection to websocket:", err)
 		return
 	}
-	defer conn.Close()
+	wsConn := &WebsocketConn{Conn: conn}
+	defer wsConn.RemoveConnection()
+	wsConn.AddConnection()
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -96,13 +90,13 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 		case <-ctx.Done():
 			return
 		default:
-			var request jsonRPCRequest
+			var request JsonRPCRequest
 			if err := conn.ReadJSON(&request); err != nil {
 				log.Println("Error reading JSON-RPC request:", err)
 				return
 			}
 			wg.Add(1)
-			go handleRPCRequest(ctx, &wg, conn, request)
+			go handleRPCRequest(ctx, &wg, wsConn, request)
 		}
 	}
 	wg.Wait()
@@ -110,5 +104,9 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/websocket", websocketHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("Server started on port 8080")
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
 }
