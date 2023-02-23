@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-app
+  namespace: websocket
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: websocket-app
+  template:
+    metadata:
+      labels:
+        name: websocket-app
+    spec:
+      containers:
+        - name: application
+          image: metinagaoglu/go-websocket:1.1
+          env:
+            - name: REDIS_HOST
+              value: "svc-redis.redis-cluster.svc.cluster.local:6379"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080

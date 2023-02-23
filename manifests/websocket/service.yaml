@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocket-loadbalancer
+  namespace: websocket
+spec:
+  type: ClusterIP
+  selector:
+    app: websocket-app
+  ports:
+    - name: websocket
+      protocol: TCP
+      port: 8000
+      targetPort: 8080
