@@ -1,4 +1,4 @@
-package libs
+package websocket
 
 import (
 	"fmt"
@@ -6,14 +6,14 @@ import (
 	"log"
 )
 
-// WebsocketConn is a wrapper around websocket.Conn
-type WebsocketConn struct {
+// Client is a wrapper around websocket.Conn
+type Client struct {
 	*websocket.Conn
 }
 
-var connections = make([]*WebsocketConn, 0) // slice of connections
+var connections = make([]*Client, 0) // slice of connections
 
-func (conn *WebsocketConn) BroadcastExceptOne(message JsonRPCResponse) {
+func (conn *Client) BroadcastExceptOne(message JsonRPCResponse) {
 	for _, client := range connections {
 		if client != conn {
 			err := client.WriteJSON(message)
@@ -25,13 +25,13 @@ func (conn *WebsocketConn) BroadcastExceptOne(message JsonRPCResponse) {
 	}
 }
 
-func (conn *WebsocketConn) AddConnection() {
+func (conn *Client) AddConnection() {
 	connections = append(connections, conn)
 	fmt.Println("Client count is now: ", len(connections))
 
 }
 
-func (conn *WebsocketConn) RemoveConnection() {
+func (conn *Client) RemoveConnection() {
 	for i, client := range connections {
 		if client == conn {
 			connections = append(connections[:i], connections[i+1:]...)
@@ -40,7 +40,7 @@ func (conn *WebsocketConn) RemoveConnection() {
 	}
 }
 
-func (conn *WebsocketConn) Close() error {
+func (conn *Client) Close() error {
 	conn.RemoveConnection()
 	return conn.Conn.Close()
 }

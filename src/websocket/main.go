@@ -10,7 +10,9 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	. "go-apps-with-kubernetes/libs"
+	. "go-apps-with-kubernetes/libs/websocket"
+
+	amqpclient "go-apps-with-kubernetes/connections"
 )
 
 // declaring a struct
@@ -27,7 +29,7 @@ var upgrader = websocket.Upgrader{
 }
 
 // handleRPCRequest is a helper function to handle incoming JSON-RPC requests
-func handleRPCRequest(ctx context.Context, wg *sync.WaitGroup, conn *WebsocketConn, request JsonRPCRequest) {
+func handleRPCRequest(ctx context.Context, wg *sync.WaitGroup, conn *Client, request JsonRPCRequest) {
 	defer wg.Done()
 
 	//TODO: better way to handle this
@@ -76,7 +78,7 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error upgrading HTTP connection to websocket:", err)
 		return
 	}
-	wsConn := &WebsocketConn{Conn: conn}
+	wsConn := &Client{Conn: conn}
 	defer wsConn.RemoveConnection()
 	wsConn.AddConnection()
 
@@ -103,6 +105,12 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	// Connection to RabbitMQ
+	conn := amqpclient.Connection()
+
+	conn.Close()
+
 	http.HandleFunc("/websocket", websocketHandler)
 	log.Println("Server started on port 8080")
 	err := http.ListenAndServe(":8080", nil)
