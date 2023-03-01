@@ -28,7 +28,6 @@ func (conn *Client) BroadcastExceptOne(message JsonRPCResponse) {
 func (conn *Client) AddConnection() {
 	connections = append(connections, conn)
 	fmt.Println("Client count is now: ", len(connections))
-
 }
 
 func (conn *Client) RemoveConnection() {

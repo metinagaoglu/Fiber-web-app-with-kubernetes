@@ -57,6 +57,13 @@ func handleRPCRequest(ctx context.Context, wg *sync.WaitGroup, conn *Client, req
 			log.Println("Error writing JSON-RPC response:", err)
 			return
 		}
+
+	case "join":
+		conn.Join("my_room")
+	case "broadcast-room":
+		BroadcastToGroup("my_room",[]byte("test"))
+	case "leave":
+		conn.Leave("my_room")
 	default:
 		log.Println("Received unsupported JSON-RPC method:", request.Method)
 		// Do something with the decoded params
