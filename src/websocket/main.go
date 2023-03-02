@@ -85,7 +85,7 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error upgrading HTTP connection to websocket:", err)
 		return
 	}
-	wsConn := &Client{Conn: conn}
+	wsConn := &Client{Conn: conn, Rooms: make(map[string]bool)}
 	defer wsConn.RemoveConnection()
 	wsConn.AddConnection()
 

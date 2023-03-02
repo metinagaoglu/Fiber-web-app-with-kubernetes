@@ -9,6 +9,7 @@ import (
 // Client is a wrapper around websocket.Conn
 type Client struct {
 	*websocket.Conn
+	Rooms map[string]bool
 }
 
 var connections = make([]*Client, 0) // slice of connections
