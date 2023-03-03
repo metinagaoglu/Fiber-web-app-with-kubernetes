@@ -2,81 +2,22 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/gorilla/websocket"
 	. "go-apps-with-kubernetes/libs/websocket"
+	. "go-apps-with-kubernetes/routes"
 
 	amqpclient "go-apps-with-kubernetes/connections"
 )
-
-// declaring a struct
-type Message struct {
-	// defining struct variables
-	Chat string
-}
 
 // Upgrader to upgrade incoming HTTP requests to websocket connections
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin:     func(r *http.Request) bool { return true },
-}
-
-// handleRPCRequest is a helper function to handle incoming JSON-RPC requests
-func handleRPCRequest(ctx context.Context, wg *sync.WaitGroup, conn *Client, request JsonRPCRequest) {
-	defer wg.Done()
-
-	//TODO: better way to handle this
-	switch request.Method {
-	case "message":
-		var params map[string]interface{}
-		if err := json.Unmarshal(request.Params, &params); err != nil {
-			log.Println("Error decoding JSON-RPC params:", err)
-			return
-		}
-
-		var data Message
-		json.Unmarshal(request.Params, &data)
-
-		// Do something with the decoded params
-		conn.BroadcastExceptOne(ResponseBuilder(request.ID, json.RawMessage(fmt.Sprintf(`{"message": "%s"}`, data.Chat))))
-
-	case "sleep":
-		time.Sleep(8 * time.Second)
-		response := JsonRPCResponse{
-			ID:     request.ID,
-			Result: json.RawMessage(`{"sleep": "Success"}`),
-		}
-		if err := conn.WriteJSON(response); err != nil {
-			log.Println("Error writing JSON-RPC response:", err)
-			return
-		}
-
-	case "join":
-		conn.Join("my_room")
-	case "broadcast-room":
-		BroadcastToGroup("my_room",[]byte("test"))
-	case "leave":
-		conn.Leave("my_room")
-	default:
-		log.Println("Received unsupported JSON-RPC method:", request.Method)
-		// Do something with the decoded params
-		response := JsonRPCResponse{
-			ID:     request.ID,
-			Result: json.RawMessage(`{"example_result": " unsupported JSON-RPC method"}`),
-		}
-		if err := conn.WriteJSON(response); err != nil {
-			log.Println("Error writing JSON-RPC response:", err)
-			return
-		}
-		return
-	}
 }
 
 func websocketHandler(w http.ResponseWriter, r *http.Request) {
@@ -105,7 +46,7 @@ func websocketHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			wg.Add(1)
-			go handleRPCRequest(ctx, &wg, wsConn, request)
+			go HandleRPCRequest(ctx, &wg, wsConn, request)
 		}
 	}
 	wg.Wait()
