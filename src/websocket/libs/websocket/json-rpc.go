@@ -17,6 +17,12 @@ type JsonRPCResponse struct {
 	Error  interface{}     `json:"error"`
 }
 
+func (r *JsonRPCRequest) GetParams() map[string]interface{} {
+	var params map[string]interface{}
+	json.Unmarshal(r.Params, &params)
+	return params
+}
+
 func ResponseBuilder(id uint64, params json.RawMessage) JsonRPCResponse {
 	return JsonRPCResponse{
 		ID:     id,
