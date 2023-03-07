@@ -5,11 +5,10 @@ import (
 	"log"
 	"sync"
 
-	. "go-apps-with-kubernetes/libs/websocket"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/websocket"
+	. "go-apps-with-kubernetes/libs/websocket"
 )
-
 
 // use a single instance of Validate, it caches struct info
 var validate *validator.Validate

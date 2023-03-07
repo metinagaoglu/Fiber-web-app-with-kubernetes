@@ -9,13 +9,11 @@ import (
 	. "go-apps-with-kubernetes/modules/broadcast/validations"
 )
 
-
 type MessageHandler func(ctx context.Context, conn *Client, request map[string]interface{})
-
 
 type RequestHandler struct {
 	Handler MessageHandler
-	Rules map[string]interface{}
+	Rules   map[string]interface{}
 }
 
 var handlers = make(map[string]RequestHandler)
@@ -23,15 +21,15 @@ var handlers = make(map[string]RequestHandler)
 func GetHandlerByType(messageType string) RequestHandler {
 	handlers["broadcast"] = RequestHandler{
 		Handler: HandleBroadcastToRoom,
-		Rules: GetBroadcastValidationRules(),
+		Rules:   GetBroadcastValidationRules(),
 	}
 	handlers["join"] = RequestHandler{
 		Handler: HandleJoin,
-		Rules: nil,
+		Rules:   nil,
 	}
 	handlers["leave"] = RequestHandler{
 		Handler: HandleLeave,
-		Rules: nil,
+		Rules:   nil,
 	}
 	return handlers[messageType]
 }
