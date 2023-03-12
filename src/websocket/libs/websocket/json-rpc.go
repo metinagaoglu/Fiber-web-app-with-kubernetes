@@ -8,11 +8,11 @@ import (
 type JsonRPCRequest struct {
 	Method string          `json:"method"`
 	Params json.RawMessage `json:"params"`
-	ID     uint64          `json:"id"`
+	ID     string          `json:"id"`
 }
 
 type JsonRPCResponse struct {
-	ID     uint64          `json:"id"`
+	ID     string          `json:"id"`
 	Result json.RawMessage `json:"result"`
 	Error  interface{}     `json:"error"`
 }
@@ -23,7 +23,17 @@ func (r *JsonRPCRequest) GetParams() map[string]interface{} {
 	return params
 }
 
-func ResponseBuilder(id uint64, params json.RawMessage) JsonRPCResponse {
+func GenerateRequest(method string, params map[string]interface{}, ID string) ([]byte, error) {
+	paramsBytes, _ := json.Marshal(params)
+	jsonRPC := JsonRPCRequest{
+		Method: method,
+		Params: paramsBytes,
+		ID:     ID,
+	}
+	return json.Marshal(jsonRPC)
+}
+
+func ResponseBuilder(id string, params json.RawMessage) JsonRPCResponse {
 	return JsonRPCResponse{
 		ID:     id,
 		Result: params,

@@ -22,3 +22,7 @@ func HandleBroadcastToRoom(ctx context.Context,conn *Client, request map[string]
 func HandleLeave(ctx context.Context,conn *Client, request map[string]interface{}) {
 	conn.Leave("my_room")
 }
+
+func HandlePing(ctx context.Context,conn *Client, request map[string]interface{}) {
+	conn.WriteMessage(websocket.TextMessage,[]byte("pong"))
+}

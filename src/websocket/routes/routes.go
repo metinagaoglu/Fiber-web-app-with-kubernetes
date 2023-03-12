@@ -31,5 +31,9 @@ func GetHandlerByType(messageType string) RequestHandler {
 		Handler: HandleLeave,
 		Rules:   nil,
 	}
+	handlers["ping"] = RequestHandler{
+		Handler: HandlePing,
+		Rules:   nil,
+	}
 	return handlers[messageType]
 }
