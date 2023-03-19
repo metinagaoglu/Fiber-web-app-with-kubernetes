@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"github.com/gorilla/websocket"
+	"log"
 )
 
 var rooms = make(map[string][]*Client)
@@ -35,6 +36,17 @@ func BroadcastToGroup(groupName string, msg []byte) {
 	if clients, ok := rooms[groupName]; ok {
 		for _, c := range clients {
 			c.Conn.WriteMessage(websocket.TextMessage, msg)
+		}
+	}
+}
+
+func BroadcastJsonToGroup(groupName string, msg JsonRPCResponse) {
+	if clients, ok := rooms[groupName]; ok {
+		for _, c := range clients {
+			if err := c.WriteJSON(msg); err != nil {
+				log.Println("Error writing JSON-RPC response:", err)
+				return
+			}
 		}
 	}
 }
