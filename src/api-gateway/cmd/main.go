@@ -2,7 +2,6 @@ package main
 
 import (
     "log"
-		"fmt"
 
     "github.com/gin-gonic/gin"
     "github.com/metinagaoglu/go-grpc-api-gateway/pkg/auth"
@@ -11,8 +10,6 @@ import (
 
 func main() {
     c, err := config.LoadConfig()
-		
-		fmt.Println(c)
 
     if err != nil {
         log.Fatalln("Failed at config", err)
@@ -21,6 +18,5 @@ func main() {
     r := gin.Default()
 
     auth.RegisterRoutes(r, &c)
-		fmt.Println(c) 
-    r.Run(":3000")
+    r.Run(c.Port)
 }
