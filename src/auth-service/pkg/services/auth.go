@@ -1,6 +1,7 @@
 package services
 
 import (
+		"log"
     "context"
     "net/http"
 
@@ -17,6 +18,7 @@ type Server struct {
 }
 
 func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.RegisterResponse, error) {
+		log.Println("[/register]: Registering user")
     var user models.User
 
     if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error == nil {
@@ -37,6 +39,7 @@ func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Reg
 }
 
 func (s *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
+	  log.Println("[/login]: Logging in user")
     var user models.User
 
     if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error != nil {
@@ -64,6 +67,7 @@ func (s *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResp
 }
 
 func (s *Server) Validate(ctx context.Context, req *pb.ValidateRequest) (*pb.ValidateResponse, error) {
+		log.Println("[/validate]: Validating token")
     claims, err := s.Jwt.ValidateToken(req.Token)
 
     if err != nil {
