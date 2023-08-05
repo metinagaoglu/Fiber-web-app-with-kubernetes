@@ -8,23 +8,16 @@ import (
 		pb "websocket-gateway/pkg/auth/pb"
 )
 
-func AuthByToken(token string) bool {
-
-		fmt.Println(token)
-		if len(token) == 0 {
-			return false
-		}
-
+func AuthByToken(token string) (int64, error) {
 
 	client := auth.InitServiceClient()
 	res, err := client.Validate(context.Background(), &pb.ValidateRequest{
-			Token:    token,
+			Token: token,
 	})
 
 	if err != nil {
-			fmt.Println("err:", err)
 			//ctx.AbortWithError(http.StatusBadGateway, err)
-			return false
+			return 0, err
 	}
 	
 	// if res.err != nil {
@@ -35,5 +28,10 @@ func AuthByToken(token string) bool {
 
 	//TODO: add userId
 
-	return res.Status == 200
+	if res.Status != 200 {
+		err := fmt.Errorf("Bad gateway")
+		return 0, err
+	}
+
+	return res.UserId, nil
 }

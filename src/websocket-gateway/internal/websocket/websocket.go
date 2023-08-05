@@ -4,24 +4,22 @@ import (
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsutil"
 	"log"
-	"fmt"
 	"net/http"
+	"fmt"
 	"context"
 
 	epoll "websocket-gateway/internal/epoll"
 	handlers "websocket-gateway/internal/handlers"
-	pre_connection "websocket-gateway/internal/middleware/pre_connection"
+	utils "websocket-gateway/pkg/utils"
 )
+
 
 func WsHandler(w http.ResponseWriter, r *http.Request) {
 	epoller := epoll.GetEpollInstance()
 
-	/*
-	*	Pre connection
-	*/
-	pre_connection := pre_connection.Run(r)
-	fmt.Println("pre", pre_connection)
-	if !pre_connection {
+	userId, err := Auth(r)
+	if err != nil {
+		log.Printf("Failed to auth %v", err)
 		return
 	}
 
@@ -31,7 +29,14 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := epoller.Add(conn); err != nil {
+	nodeId := utils.GetNodeId()
+
+	// Add context to conn
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "userId", userId)
+	ctx = context.WithValue(ctx, "nodeId", nodeId)
+
+	if err := epoller.Add(conn, ctx); err != nil {
 		log.Printf("Failed to add connection %v", err)
 		conn.Close()
 	}
@@ -40,7 +45,6 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 
 func Start() {
 	epoller := epoll.GetEpollInstance()
-	ctx := context.Background()
 
 	for {
 		connections, err := epoller.Wait()
@@ -61,10 +65,15 @@ func Start() {
 				// This is commented out since in demo usage, stdout is showing messages sent from > 1M connections at very high rate
 					log.Printf("msg: %s", string(msg))
 
+					ctx := epoller.GetContext(conn)
+					//ctx.WithValue(ctx, "nodeId", nodeId)
+
+					// All websocket messages to be handled here
 					handlers.Run(&conn, ctx, string(msg))
+
 					err = wsutil.WriteServerMessage(conn, 1, msg)
 					if err != nil {
-						// handle error
+						//TODO: handle error
 					}
 			}
 		}

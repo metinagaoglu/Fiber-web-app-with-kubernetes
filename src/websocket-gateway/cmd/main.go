@@ -11,6 +11,7 @@ import (
 )
 
 
+
 func main() {
 	// Increase resources limitations
 	var rLimit syscall.Rlimit
@@ -28,6 +29,7 @@ func main() {
 			log.Fatalf("pprof failed: %v", err)
 		}
 	}()
+
 
 	go websocket.Start()
 	logger.Info("main.go", "Starting gateway on 8000")

@@ -22,11 +22,11 @@ type MessageHandler interface {
 
 func Run(conn *net.Conn,ctx context.Context, message string) {
 
-
     // Parse and dispatch message
     var decodedMessage Message
     err := json.Unmarshal([]byte(message), &decodedMessage)
     if err != nil {
+        fmt.Println(err)
         fmt.Println("Error decoding message")
         return
     }

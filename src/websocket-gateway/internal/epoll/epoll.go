@@ -7,11 +7,14 @@ import (
 	"reflect"
 	"sync"
 	"syscall"
+	"context"
 )
+
 
 type Epoll struct {
 	fd          int
 	connections map[int]net.Conn
+	contexts 	  map[int]context.Context
 	lock        *sync.RWMutex
 }
 
@@ -40,11 +43,12 @@ func MkEpoll() (*Epoll, error) {
 	return &Epoll{
 		fd:          fd,
 		lock:        &sync.RWMutex{},
+		contexts: make(map[int]context.Context),
 		connections: make(map[int]net.Conn),
 	}, nil
 }
 
-func (e *Epoll) Add(conn net.Conn) error {
+func (e *Epoll) Add(conn net.Conn, ctx context.Context) error {
 	// Extract file descriptor associated with the connection
 	fd := websocketFD(conn)
 	err := unix.EpollCtl(e.fd, syscall.EPOLL_CTL_ADD, fd, &unix.EpollEvent{Events: unix.POLLIN | unix.POLLHUP, Fd: int32(fd)})
@@ -54,6 +58,7 @@ func (e *Epoll) Add(conn net.Conn) error {
 	e.lock.Lock()
 	defer e.lock.Unlock()
 	e.connections[fd] = conn
+	e.contexts[fd] = ctx
 	//if len(e.connections)%100 == 0 {
 		log.Printf("Total number of connections: %v", len(e.connections))
 	//}
@@ -91,6 +96,13 @@ func (e *Epoll) Wait() ([]net.Conn, error) {
 	return connections, nil
 }
 
+func (e *Epoll) GetContext(conn net.Conn) context.Context {
+	fd := websocketFD(conn)
+	e.lock.RLock()
+	defer e.lock.RUnlock()
+	return e.contexts[fd]
+}
+
 func websocketFD(conn net.Conn) int {
 	tcpConn := reflect.Indirect(reflect.ValueOf(conn)).FieldByName("conn")
 	fdVal := tcpConn.FieldByName("fd")
@@ -105,4 +117,8 @@ func GetIdFromConn(conn net.Conn) int {
 	pfdVal := reflect.Indirect(fdVal).FieldByName("pfd")
 
 	return int(pfdVal.FieldByName("Sysfd").Int())
+}
+
+func GetConnById(connId int) net.Conn {
+	return epoller.connections[connId]
 }

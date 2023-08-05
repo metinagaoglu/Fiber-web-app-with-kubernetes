@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package session;
+
+option go_package = "./pkg/session/pb";
+
+service SessionService {
+  rpc StartSession(StartSessionRequest) returns (StartSessionResponse) {}
+  rpc EndSession(EndSessionRequest) returns (EndSessionResponse) {}
+  rpc GetSession(GetSessionRequest) returns (GetSessionResponse) {}
+}
+
+message StartSessionRequest {
+  string user_id = 1;
+  string connection_id = 2;
+  string node_id = 3;
+}
+
+message StartSessionResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+
+message EndSessionRequest {
+  string connection_id = 1;
+}
+
+message EndSessionResponse {
+  int64 status = 1;
+  string error = 2;
+}
+
+
+message GetSessionRequest { 
+  string user_id = 1;
+}
+
+message GetSessionResponse {
+  int64 status = 1;
+  string error = 2;
+  string node_id = 3;
+}

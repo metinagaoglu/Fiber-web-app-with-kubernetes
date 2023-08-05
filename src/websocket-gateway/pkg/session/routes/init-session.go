@@ -1,12 +1,15 @@
 package routes
 
 import (
-	"fmt"
 	"net"
 	"github.com/gobwas/ws/wsutil"
 	"context"
+	"strconv"
+	"fmt"
 
-		epoll "websocket-gateway/internal/epoll"
+	epoll "websocket-gateway/internal/epoll"
+	session "websocket-gateway/pkg/session"
+	pb "websocket-gateway/pkg/session/pb"
 )
 
 type InitSessionHandler struct{}
@@ -16,7 +19,24 @@ type InitSessionHandlerBody struct {
 }
 
 func (h *InitSessionHandler) HandleMessage(conn *net.Conn,ctx context.Context, route string, payload string) {
-		fmt.Println("id:", epoll.GetIdFromConn(*conn))
+
+		// Write Node ID 
+		nodeId := ctx.Value("nodeId")
+		userID := ctx.Value("userId")
+
+		fmt.Println("nodeId:", nodeId)
+		fmt.Println("userID:", userID)
+
+		connectionId := epoll.GetIdFromConn(*conn)
+
+		//TODO: Get User ID
+		client := session.InitServiceClient()
+		 client.StartSession(context.Background(), &pb.StartSessionRequest{
+        UserId:    "1",
+				NodeId:   nodeId.(string),
+				ConnectionId:  strconv.Itoa(connectionId),
+    })
+
 		ctx.Done()
-		wsutil.WriteServerMessage(*conn, 1, []byte("Session initialized"))
+		wsutil.WriteServerMessage(*conn, 1, []byte("inti-session"))
 }

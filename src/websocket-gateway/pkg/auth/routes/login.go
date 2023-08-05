@@ -26,7 +26,6 @@ func (h *AuthHandler) HandleMessage(conn *net.Conn,ctx context.Context, route st
     //     return
     // }
 
-		fmt.Println(b)
 		
 		client := auth.InitServiceClient()
 		res, err := client.Validate(context.Background(), &pb.ValidateRequest{
