@@ -1,25 +1,25 @@
 package routes
 
 import (
-	"fmt"
 	"context"
+	"fmt"
 
-		auth "websocket-gateway/pkg/auth"
-		pb "websocket-gateway/pkg/auth/pb"
+	auth "websocket-gateway/pkg/auth"
+	pb "websocket-gateway/pkg/auth/pb"
 )
 
 func AuthByToken(token string) (int64, error) {
 
 	client := auth.InitServiceClient()
 	res, err := client.Validate(context.Background(), &pb.ValidateRequest{
-			Token: token,
+		Token: token,
 	})
 
 	if err != nil {
-			//ctx.AbortWithError(http.StatusBadGateway, err)
-			return 0, err
+		//ctx.AbortWithError(http.StatusBadGateway, err)
+		return 0, err
 	}
-	
+
 	// if res.err != nil {
 	// 	fmt.Println("err:", err)
 	// 	//ctx.AbortWithError(http.StatusBadGateway, err)

@@ -1,27 +1,26 @@
 package Epoll
 
 import (
+	"context"
 	"golang.org/x/sys/unix"
 	"log"
 	"net"
 	"reflect"
 	"sync"
 	"syscall"
-	"context"
 )
-
 
 type Epoll struct {
 	fd          int
 	connections map[int]net.Conn
-	contexts 	  map[int]context.Context
+	contexts    map[int]context.Context
 	lock        *sync.RWMutex
 }
 
 var epoller *Epoll
 
 // Singleton
-func GetEpollInstance() *Epoll{
+func GetEpollInstance() *Epoll {
 	if epoller != nil {
 		return epoller
 	}
@@ -43,7 +42,7 @@ func MkEpoll() (*Epoll, error) {
 	return &Epoll{
 		fd:          fd,
 		lock:        &sync.RWMutex{},
-		contexts: make(map[int]context.Context),
+		contexts:    make(map[int]context.Context),
 		connections: make(map[int]net.Conn),
 	}, nil
 }
@@ -60,7 +59,7 @@ func (e *Epoll) Add(conn net.Conn, ctx context.Context) error {
 	e.connections[fd] = conn
 	e.contexts[fd] = ctx
 	//if len(e.connections)%100 == 0 {
-		log.Printf("Total number of connections: %v", len(e.connections))
+	log.Printf("Total number of connections: %v", len(e.connections))
 	//}
 	return nil
 }
@@ -75,7 +74,7 @@ func (e *Epoll) Remove(conn net.Conn) error {
 	defer e.lock.Unlock()
 	delete(e.connections, fd)
 	//if len(e.connections)%100 == 0 {
-		log.Printf("Total number of connections: %v", len(e.connections))
+	log.Printf("Total number of connections: %v", len(e.connections))
 	//}
 	return nil
 }

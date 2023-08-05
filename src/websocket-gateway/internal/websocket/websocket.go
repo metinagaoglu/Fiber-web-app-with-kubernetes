@@ -1,18 +1,16 @@
 package websocket
 
 import (
+	"context"
 	"github.com/gobwas/ws"
 	"github.com/gobwas/ws/wsutil"
 	"log"
 	"net/http"
-	"fmt"
-	"context"
 
 	epoll "websocket-gateway/internal/epoll"
 	handlers "websocket-gateway/internal/handlers"
 	utils "websocket-gateway/pkg/utils"
 )
-
 
 func WsHandler(w http.ResponseWriter, r *http.Request) {
 	epoller := epoll.GetEpollInstance()
@@ -42,7 +40,6 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func Start() {
 	epoller := epoll.GetEpollInstance()
 
@@ -63,18 +60,18 @@ func Start() {
 				conn.Close()
 			} else {
 				// This is commented out since in demo usage, stdout is showing messages sent from > 1M connections at very high rate
-					log.Printf("msg: %s", string(msg))
+				log.Printf("msg: %s", string(msg))
 
-					ctx := epoller.GetContext(conn)
-					//ctx.WithValue(ctx, "nodeId", nodeId)
+				ctx := epoller.GetContext(conn)
+				//ctx.WithValue(ctx, "nodeId", nodeId)
 
-					// All websocket messages to be handled here
-					handlers.Run(&conn, ctx, string(msg))
+				// All websocket messages to be handled here
+				handlers.Run(&conn, ctx, string(msg))
 
-					err = wsutil.WriteServerMessage(conn, 1, msg)
-					if err != nil {
-						//TODO: handle error
-					}
+				err = wsutil.WriteServerMessage(conn, 1, msg)
+				if err != nil {
+					//TODO: handle error
+				}
 			}
 		}
 	}
