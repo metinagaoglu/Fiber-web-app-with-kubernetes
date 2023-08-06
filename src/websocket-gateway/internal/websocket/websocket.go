@@ -3,7 +3,7 @@ package websocket
 import (
 	"context"
 	"github.com/gobwas/ws"
-	"github.com/gobwas/ws/wsutil"
+	wsutil "github.com/gobwas/ws/wsutil"
 	"log"
 	"net/http"
 

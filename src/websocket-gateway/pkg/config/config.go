@@ -6,6 +6,7 @@ type Config struct {
 	Port          string `mapstructure:"PORT"`
 	AuthSvcUrl    string `mapstructure:"AUTH_SVC_URL"`
 	SessionSvcUrl string `mapstructure:"SESSION_SVC_URL"`
+	RabbitMqUrl   string `mapstructure:"RABBITMQ_URL"`
 }
 
 func LoadConfig() (c Config, err error) {

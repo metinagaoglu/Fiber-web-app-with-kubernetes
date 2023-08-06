@@ -6,6 +6,7 @@ import (
 	_ "net/http/pprof"
 	"syscall"
 
+	queue "websocket-gateway/internal/queue"
 	websocket "websocket-gateway/internal/websocket"
 	logger "websocket-gateway/pkg/logger"
 )
@@ -27,6 +28,11 @@ func main() {
 			log.Fatalf("pprof failed: %v", err)
 		}
 	}()
+
+	mqueue := queue.NewQueueAdapter()
+	mqueue.Connect()
+	mqueue.QueueDeclare()
+	go mqueue.Subscribe(websocket.HandleQueueMessage)
 
 	go websocket.Start()
 	logger.Info("main.go", "Starting gateway on 8000")
