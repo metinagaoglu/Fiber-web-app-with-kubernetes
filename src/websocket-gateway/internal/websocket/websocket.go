@@ -66,7 +66,7 @@ func Start() {
 				//ctx.WithValue(ctx, "nodeId", nodeId)
 
 				// All websocket messages to be handled here
-				handlers.Run(&conn, ctx, string(msg))
+				go handlers.Run(&conn, ctx, msg)
 
 				err = wsutil.WriteServerMessage(conn, 1, msg)
 				if err != nil {
