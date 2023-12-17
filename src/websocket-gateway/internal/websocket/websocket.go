@@ -5,9 +5,11 @@ import (
 	"github.com/gobwas/ws"
 	wsutil "github.com/gobwas/ws/wsutil"
 	"log"
+	"fmt"
 	"net/http"
 
 	epoll "websocket-gateway/internal/epoll"
+	middleware "websocket-gateway/internal/middleware"
 	handlers "websocket-gateway/internal/handlers"
 	utils "websocket-gateway/pkg/utils"
 )
@@ -34,6 +36,11 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	ctx = context.WithValue(ctx, "userId", userId)
 	ctx = context.WithValue(ctx, "nodeId", nodeId)
 
+
+	// Post connection middlewares
+	middleware.InitSessionMiddleware(conn, ctx)
+
+
 	if err := epoller.Add(conn, ctx); err != nil {
 		log.Printf("Failed to add connection %v", err)
 		conn.Close()
@@ -54,9 +61,11 @@ func Start() {
 				break
 			}
 			if msg, _, err := wsutil.ReadClientData(conn); err != nil {
+				fmt.Println("Disconnect handler", conn)
 				if err := epoller.Remove(conn); err != nil {
 					log.Printf("Failed to remove %v", err)
 				}
+				//TODO: close session
 				conn.Close()
 			} else {
 				// This is commented out since in demo usage, stdout is showing messages sent from > 1M connections at very high rate
