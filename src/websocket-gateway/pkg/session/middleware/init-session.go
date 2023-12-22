@@ -22,11 +22,12 @@ func InitSession(conn net.Conn, ctx context.Context) {
 	fmt.Println("nodeId:", nodeId)
 	fmt.Println("userID:", userID)
 
+
 	connectionId := epoll.GetIdFromConn(conn)
 
 	client := session.InitServiceClient()
 	client.StartSession(context.Background(), &pb.StartSessionRequest{
-		UserId:       "1",
+		UserId:       userID.(int64),
 		NodeId:       nodeId.(string),
 		ConnectionId: strconv.Itoa(connectionId),
 	})

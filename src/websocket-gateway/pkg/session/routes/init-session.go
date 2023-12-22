@@ -32,7 +32,7 @@ func (h *InitSessionHandler) HandleMessage(conn *net.Conn, ctx context.Context, 
 	//TODO: Get User ID
 	client := session.InitServiceClient()
 	client.StartSession(context.Background(), &pb.StartSessionRequest{
-		UserId:       "1",
+		UserId:       userID.(int64),
 		NodeId:       nodeId.(string),
 		ConnectionId: strconv.Itoa(connectionId),
 	})
