@@ -65,7 +65,9 @@ func Start() {
 				if err := epoller.Remove(conn); err != nil {
 					log.Printf("Failed to remove %v", err)
 				}
+				ctx := epoller.GetContext(conn)
 				//TODO: close session
+				middleware.EndSessionMiddleware(conn, ctx)
 				conn.Close()
 			} else {
 				// This is commented out since in demo usage, stdout is showing messages sent from > 1M connections at very high rate

@@ -5,6 +5,7 @@ import "github.com/spf13/viper"
 type Config struct {
     DBUrl        string `mapstructure:"DB_URL"`
 		Port         string `mapstructure:"PORT"`
+		RedisUrl     string `mapstructure:"REDIS_URL"`
 }
 
 func LoadConfig() (config Config, err error) {
