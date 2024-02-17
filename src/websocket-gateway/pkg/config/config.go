@@ -1,6 +1,7 @@
 package config
 
 import "github.com/spf13/viper"
+import "fmt"
 
 type Config struct {
 	Port          string `mapstructure:"PORT"`
@@ -19,10 +20,16 @@ func LoadConfig() (c Config, err error) {
 	err = viper.ReadInConfig()
 
 	if err != nil {
+		fmt.Println(fmt.Errorf("Fatal error config file: %s \n", err))
+		return
+	}
+	fmt.Println(c)
+
+	err = viper.Unmarshal(&c)
+	if err != nil {
+		fmt.Println(fmt.Errorf("Fatal error config file: %s \n", err))
 		return
 	}
 
-	err = viper.Unmarshal(&c)
-
-	return
+	return c, nil
 }

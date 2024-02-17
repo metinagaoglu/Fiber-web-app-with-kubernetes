@@ -30,7 +30,11 @@ func main() {
 	}()
 
 	mqueue := queue.NewQueueAdapter()
-	mqueue.Connect()
+	err := mqueue.Connect()
+	if err != nil {
+		logger.Error("main.go", "Failed to connect to queue")
+		return
+	}
 	mqueue.QueueDeclare()
 	go mqueue.Subscribe(websocket.HandleQueueMessage)
 
