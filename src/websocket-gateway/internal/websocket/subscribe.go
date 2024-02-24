@@ -2,10 +2,10 @@ package websocket
 
 import (
 	"fmt"
-	wsutil "github.com/gobwas/ws/wsutil"
 	"log"
 	"strconv"
 	epoll "websocket-gateway/internal/epoll"
+	wsutil "github.com/gobwas/ws/wsutil"
 )
 
 /* This function consume rabbitmq  */

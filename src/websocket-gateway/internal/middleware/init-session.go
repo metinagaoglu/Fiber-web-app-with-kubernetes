@@ -3,9 +3,9 @@ package websocket
 import (
 	"context"
 	"net"
-	InitSession "websocket-gateway/pkg/session/middleware"
+	middleware "websocket-gateway/pkg/session/middleware"
 )
 
 func InitSessionMiddleware(conn net.Conn, ctx context.Context) {
-	InitSession.InitSession(conn, ctx)
+	middleware.InitSession(conn, ctx)
 }

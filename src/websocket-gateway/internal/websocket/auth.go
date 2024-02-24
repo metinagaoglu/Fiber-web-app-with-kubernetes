@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	authMiddleware "websocket-gateway/pkg/auth/middleware"
+	middleware "websocket-gateway/pkg/auth/middleware"
 )
 
 // secureHeadersMiddleware adds two basic security headers to each HTTP response
@@ -22,5 +22,5 @@ func Auth(r *http.Request) (int64, error) {
 		err := fmt.Errorf("No token provided")
 		return 0, err
 	}
-	return authMiddleware.AuthByToken(token)
+	return middleware.AuthByToken(token)
 }

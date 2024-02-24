@@ -6,8 +6,8 @@ import (
 	"net"
 
 	"encoding/json"
-	authRoutes "websocket-gateway/pkg/auth/routes"
-	sessionRoutes "websocket-gateway/pkg/session/routes"
+	authroutes "websocket-gateway/pkg/auth/routes"
+	sessionroutes "websocket-gateway/pkg/session/routes"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -50,8 +50,8 @@ func Run(connPtr *net.Conn, ctx context.Context, message []byte) {
 	//TODO: Implement validation and middleware layers here
 
 	handlers := make(map[string]MessageHandler)
-	handlers["auth"] = &authRoutes.AuthHandler{}
-	handlers["init-session"] = &sessionRoutes.InitSessionHandler{}
+	handlers["auth"] = &authroutes.AuthHandler{}
+	handlers["init-session"] = &sessionroutes.InitSessionHandler{}
 
 	if handler, ok := handlers[string(*decodedMessage.Route)]; ok {
 		go handler.HandleMessage(connPtr, ctx, *decodedMessage.Route, *decodedMessage.Payload)

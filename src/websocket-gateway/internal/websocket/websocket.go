@@ -3,11 +3,11 @@ package websocket
 import (
 	"context"
 	"github.com/gobwas/ws"
-	wsutil "github.com/gobwas/ws/wsutil"
 	"log"
 	"fmt"
 	"net/http"
 
+	wsutil "github.com/gobwas/ws/wsutil"
 	epoll "websocket-gateway/internal/epoll"
 	middleware "websocket-gateway/internal/middleware"
 	handlers "websocket-gateway/internal/handlers"
