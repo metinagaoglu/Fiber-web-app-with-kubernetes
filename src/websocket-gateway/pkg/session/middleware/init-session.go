@@ -13,7 +13,7 @@ import (
 )
 
 
-func InitSession(conn net.Conn, ctx context.Context) {
+func InitSession(ctx context.Context, conn net.Conn) {
 
 	// Write Node ID
 	nodeId := ctx.Value("nodeId")

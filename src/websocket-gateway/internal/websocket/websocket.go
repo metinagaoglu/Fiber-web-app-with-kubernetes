@@ -38,7 +38,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 
 
 	// Post connection middlewares
-	middleware.InitSessionMiddleware(conn, ctx)
+	middleware.InitSessionMiddleware(ctx, conn)
 
 
 	if err := epoller.Add(conn, ctx); err != nil {
@@ -67,7 +67,7 @@ func Start() {
 				}
 				ctx := epoller.GetContext(conn)
 				//TODO: close session
-				middleware.EndSessionMiddleware(conn, ctx)
+				middleware.EndSessionMiddleware(ctx, conn)
 				conn.Close()
 			} else {
 				// This is commented out since in demo usage, stdout is showing messages sent from > 1M connections at very high rate

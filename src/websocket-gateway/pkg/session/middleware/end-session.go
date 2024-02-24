@@ -9,13 +9,10 @@ import (
 )
 
 
-func EndSession(conn net.Conn, ctx context.Context) {
+func EndSession(ctx context.Context, conn net.Conn) {
 
 	// Write Node ID
 	userId := ctx.Value("userId")
-
-	// String cast
-
 
 	client := session.InitServiceClient()
 	client.EndSession(context.Background(), &pb.EndSessionRequest{

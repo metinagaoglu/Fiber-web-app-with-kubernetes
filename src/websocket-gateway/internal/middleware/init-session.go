@@ -6,6 +6,6 @@ import (
 	middleware "websocket-gateway/pkg/session/middleware"
 )
 
-func InitSessionMiddleware(conn net.Conn, ctx context.Context) {
-	middleware.InitSession(conn, ctx)
+func InitSessionMiddleware(ctx context.Context,conn net.Conn) {
+	middleware.InitSession(ctx, conn)
 }
