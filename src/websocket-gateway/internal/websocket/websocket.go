@@ -2,15 +2,15 @@ package websocket
 
 import (
 	"context"
+	"fmt"
 	"github.com/gobwas/ws"
 	"log"
-	"fmt"
 	"net/http"
 
 	wsutil "github.com/gobwas/ws/wsutil"
 	epoll "websocket-gateway/internal/epoll"
-	middleware "websocket-gateway/internal/middleware"
 	handlers "websocket-gateway/internal/handlers"
+	middleware "websocket-gateway/internal/middleware"
 	utils "websocket-gateway/pkg/utils"
 )
 
@@ -36,10 +36,8 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	ctx = context.WithValue(ctx, "userId", userId)
 	ctx = context.WithValue(ctx, "nodeId", nodeId)
 
-
 	// Post connection middlewares
 	middleware.InitSessionMiddleware(ctx, conn)
-
 
 	if err := epoller.Add(conn, ctx); err != nil {
 		log.Printf("Failed to add connection %v", err)

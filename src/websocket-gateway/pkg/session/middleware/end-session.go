@@ -8,7 +8,6 @@ import (
 	pb "websocket-gateway/pkg/session/pb"
 )
 
-
 func EndSession(ctx context.Context, conn net.Conn) {
 
 	// Write Node ID

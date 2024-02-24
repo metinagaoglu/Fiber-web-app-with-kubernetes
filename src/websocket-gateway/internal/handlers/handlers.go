@@ -27,11 +27,11 @@ func Run(connPtr *net.Conn, ctx context.Context, message []byte) {
 	var decodedMessage Message
 
 	err := json.Unmarshal([]byte(message), &decodedMessage)
-  if err != nil {
+	if err != nil {
 		conn := *connPtr
 		conn.Close()
 		return
-  }
+	}
 
 	err = Validator.Struct(decodedMessage)
 	if err != nil {

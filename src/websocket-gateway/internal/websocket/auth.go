@@ -9,7 +9,7 @@ import (
 
 // secureHeadersMiddleware adds two basic security headers to each HTTP response
 func Auth(r *http.Request) (int64, error) {
-  //return 1, nil
+	//return 1, nil
 	var token string
 	token = r.Header.Get("Authorization")
 

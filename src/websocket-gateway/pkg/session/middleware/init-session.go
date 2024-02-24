@@ -12,7 +12,6 @@ import (
 	pb "websocket-gateway/pkg/session/pb"
 )
 
-
 func InitSession(ctx context.Context, conn net.Conn) {
 
 	// Write Node ID
@@ -21,7 +20,6 @@ func InitSession(ctx context.Context, conn net.Conn) {
 
 	fmt.Println("nodeId:", nodeId)
 	fmt.Println("userID:", userID)
-
 
 	connectionId := epoll.GetIdFromConn(conn)
 

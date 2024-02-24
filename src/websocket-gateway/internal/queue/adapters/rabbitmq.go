@@ -4,8 +4,8 @@ import (
 	"fmt"
 	amqp "github.com/rabbitmq/amqp091-go"
 	config "websocket-gateway/pkg/config"
-	utils "websocket-gateway/pkg/utils"
 	logger "websocket-gateway/pkg/logger"
+	utils "websocket-gateway/pkg/utils"
 )
 
 var amqConn *amqp.Connection
@@ -17,13 +17,12 @@ type RabbitMQAdapter struct {
 func (r *RabbitMQAdapter) Connect() error {
 	c, _ := config.LoadConfig()
 
-	logger.Info(c.RabbitMqUrl, "Connecting to RabbitMQ");
+	logger.Info(c.RabbitMqUrl, "Connecting to RabbitMQ")
 	conn, err := amqp.Dial(c.RabbitMqUrl)
 	if err != nil {
 		return err
 	}
 	defer conn.Close()
-
 
 	amqConn, err := amqp.Dial(c.RabbitMqUrl)
 	if err != nil {
