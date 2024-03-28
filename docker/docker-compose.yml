@@ -12,3 +12,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3001:3000
+  auth-service:
+    build:
+      context: ../src/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - 3002:3000
+  session-service:
+    build:
+      context: ../src/session-service
+      dockerfile: Dockerfile
+    ports:
+      - 3003:3000
