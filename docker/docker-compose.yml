@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3000:8000
+    volumes:
+      - ../src/websocket-gateway/:/go/src/app
   api-gateway:
     build:
       context: ../src/api-gateway
