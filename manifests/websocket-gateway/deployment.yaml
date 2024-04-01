@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-gateway
+  namespace: websocket
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: websocket-gateway
+  template:
+    metadata:
+      labels:
+        name: websocket-gateway
+    spec:
+      containers:
+        - name: application
+          image: metinagaoglu/go-websocket:1.4
+          env:
+            - name: REDIS_HOST
+              value: "svc-redis.redis-cluster.svc.cluster.local:6379"
+            - name: RABBITMQ_URL
+              value: "amqp://guest:guest@rabbitmq-service.websocket.svc.cluster.local:5672"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000

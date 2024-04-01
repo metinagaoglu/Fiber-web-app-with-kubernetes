@@ -1,0 +1,17 @@
+# rabbitmq-service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+  namespace: websocket
+spec:
+  selector:
+    app: rabbitmq
+  externalName: rabbitmq-service.websocket.svc.cluster.local
+  ports:
+    - port: 5672
+      targetPort: 5672
+      protocol: TCP
+      nodePort: 32667
+  type: NodePort

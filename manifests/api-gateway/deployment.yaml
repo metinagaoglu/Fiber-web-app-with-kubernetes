@@ -2,24 +2,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: websocket-app
-  namespace: websocket
+  name: api-gateway
+  namespace: api-gateway
 spec:
   replicas: 2
   selector:
     matchLabels:
-      name: websocket-app
+      name: api-gateway
   template:
     metadata:
       labels:
-        name: websocket-app
+        name: api-gateway
     spec:
       containers:
-        - name: application
-          image: metinagaoglu/go-websocket:1.1
+        - name: api-gateway
+          image: metinagaoglu/example-api-gateway:1.2
           env:
             - name: REDIS_HOST
               value: "svc-redis.redis-cluster.svc.cluster.local:6379"
+            - name: PORT
+              value: ":3000"
+            - name: AUTH_SVC_URL
+              value: localhost:50051
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 3000
