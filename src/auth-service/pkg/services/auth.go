@@ -39,7 +39,7 @@ func (s *Server) Register(ctx context.Context, req *pb.RegisterRequest) (*pb.Reg
 }
 
 func (s *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
-	  log.Println("[/login]: Logging in user")
+	log.Println("[/login]: Logging in user")
     var user models.User
 
     if result := s.H.DB.Where(&models.User{Email: req.Email}).First(&user); result.Error != nil {

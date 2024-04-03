@@ -24,7 +24,7 @@ func main() {
     jwt := utils.JwtWrapper{
         SecretKey:       c.JWTSecretKey,
         Issuer:          "go-grpc-auth-svc",
-        ExpirationHours: 24 * 365,
+        ExpirationHours: 1,
     }
 
     lis, err := net.Listen("tcp", c.Port)
@@ -47,4 +47,4 @@ func main() {
     if err := grpcServer.Serve(lis); err != nil {
         log.Fatalln("Failed to serve:", err)
     }
-} 
+}

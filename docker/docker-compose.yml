@@ -22,9 +22,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3002:3000
+    volumes:
+      - ../src/auth-service/:/go/src/app
   session-service:
     build:
       context: ../src/session-service
       dockerfile: Dockerfile
     ports:
       - 3003:3000
+    volumes:
+      - ../src/session-service/:/go/src/app

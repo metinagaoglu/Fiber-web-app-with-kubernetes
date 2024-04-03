@@ -28,7 +28,7 @@ func (s *Server) StartSession(ctx context.Context, req *pb.StartSessionRequest) 
 }
 
 func (s *Server) EndSession(ctx context.Context, req *pb.EndSessionRequest) (*pb.EndSessionResponse, error) {
-	log.Println("[/login]: Logging in user")
+	log.Println("[/login]: End session")
 
     sessionKey := fmt.Sprintf("session:%d", req.UserId)
     s.Rdb.Del(ctx, sessionKey)
