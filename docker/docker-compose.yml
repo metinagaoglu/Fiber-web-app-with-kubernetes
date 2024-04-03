@@ -2,33 +2,33 @@ version: '3'
 services:
   websocket-gateway:
     build:
-      context: ../src/websocket-gateway
+      context: ../services/websocket-gateway
       dockerfile: Dockerfile
     ports:
       - 3000:8000
     volumes:
-      - ../src/websocket-gateway/:/go/src/app
+      - ../services/websocket-gateway/:/go/src/app
   api-gateway:
     build:
-      context: ../src/api-gateway
+      context: ../services/api-gateway
       dockerfile: Dockerfile
     ports:
       - 3001:3000
     volumes:
-      - ../src/api-gateway/:/go/src/app
+      - ../services/api-gateway/:/go/src/app
   auth-service:
     build:
-      context: ../src/auth-service
+      context: ../services/auth-service
       dockerfile: Dockerfile
     ports:
       - 3002:3000
     volumes:
-      - ../src/auth-service/:/go/src/app
+      - ../services/auth-service/:/go/src/app
   session-service:
     build:
-      context: ../src/session-service
+      context: ../services/session-service
       dockerfile: Dockerfile
     ports:
       - 3003:3000
     volumes:
-      - ../src/session-service/:/go/src/app
+      - ../services/session-service/:/go/src/app
