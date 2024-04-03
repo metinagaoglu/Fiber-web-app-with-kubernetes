@@ -14,6 +14,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 3001:3000
+    volumes:
+      - ../src/api-gateway/:/go/src/app
   auth-service:
     build:
       context: ../src/auth-service
