@@ -1,35 +1,36 @@
 package routes
 
 import (
-    "fmt"
-    "context"
-    "net/http"
+	"context"
+	"fmt"
+	"net/http"
 
-    "github.com/gin-gonic/gin"
-    "github.com/metinagaoglu/go-grpc-api-gateway/pkg/auth/pb"
+	"github.com/gin-gonic/gin"
+
+	"github.com/metinagaoglu/go-grpc-api-gateway/pkg/auth/pb"
 )
 
 type ValidateRequestBody struct {
-    Token    string `json:"token"`
+	Token string `json:"token" binding:"required"`
 }
 
 func Validate(ctx *gin.Context, c pb.AuthServiceClient) {
-    body := ValidateRequestBody{}
+	body := ValidateRequestBody{}
 
-    if err := ctx.BindJSON(&body); err != nil {
-        ctx.AbortWithError(http.StatusBadRequest, err)
-        return
-    }
+	if err := ctx.BindJSON(&body); err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+		return
+	}
 
-    res, err := c.Validate(context.Background(), &pb.ValidateRequest{
-        Token:    body.Token,
-    })
+	res, err := c.Validate(context.Background(), &pb.ValidateRequest{
+		Token: body.Token,
+	})
 
-    if err != nil {
-        fmt.Println("=====================")
-        ctx.AbortWithError(http.StatusBadGateway, err)
-        return
-    }
+	if err != nil {
+		fmt.Println("=====================")
+		ctx.AbortWithError(http.StatusBadGateway, err)
+		return
+	}
 
-    ctx.JSON(int(res.Status), &res)
+	ctx.JSON(int(res.Status), &res)
 }

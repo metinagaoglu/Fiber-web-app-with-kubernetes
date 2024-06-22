@@ -1,17 +1,17 @@
 package routes
 
 import (
-    "context"
-    "net/http"
+	"context"
+	"net/http"
 
-    "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 
-    "github.com/metinagaoglu/go-grpc-api-gateway/pkg/auth/pb"
+	"github.com/metinagaoglu/go-grpc-api-gateway/pkg/auth/pb"
 )
 
 type LoginRequestBody struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password"  binding:"required"`
 }
 
 func Login(ctx *gin.Context, c pb.AuthServiceClient) {
