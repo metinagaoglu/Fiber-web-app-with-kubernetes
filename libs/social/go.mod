@@ -1,4 +1,4 @@
-module social
+module github.com/metinagaoglu/go-webrtc-microservices/libs/social
 
 go 1.20
 
