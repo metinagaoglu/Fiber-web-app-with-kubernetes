@@ -11,12 +11,10 @@ service SocialService {
   rpc CountFollowers(CountFollowersRequest) returns (CountFollowersResponse) {}
 }
 
+
 // AddFollowerRequest
 message AddFollowerRequest {
-  string followee = 1;
-  string follower = 2;
-  string username = 3;
-  string avatar = 4;
+  int64 followee = 1;
 }
 
 message AddFollowerResponse {

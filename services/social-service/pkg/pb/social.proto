@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package auth;
+package pb;
 
-option go_package = "./pkg/pb";
+option go_package = "./pb";
 
 service SocialService {
   rpc AddFollower(AddFollowerRequest) returns (AddFollowerResponse) {}
@@ -13,10 +13,7 @@ service SocialService {
 
 // AddFollowerRequest
 message AddFollowerRequest {
-  string followee = 1;
-  string follower = 2;
-  string username = 3;
-  string avatar = 4;
+  int64 followee = 1;
 }
 
 message AddFollowerResponse {

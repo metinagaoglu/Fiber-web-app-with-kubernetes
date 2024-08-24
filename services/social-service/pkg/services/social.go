@@ -16,7 +16,18 @@ type Server struct {
 }
 
 func (s *Server) AddFollower(ctx context.Context, req *pb.AddFollowerRequest) (*pb.AddFollowerResponse, error) {
-	fmt.Println(req)
+	fmt.Println(req.Followee)
+
+	//TODO: get follower and followee from auth service
+
+	//TODO: check if follower and followee exists
+
+	// Upsert to the database
+
+	// Dispatch event to the follower. (Check online and publish it)
+
+	// Return success
+
 	return &pb.AddFollowerResponse{
 		Status: http.StatusOK,
 	}, nil

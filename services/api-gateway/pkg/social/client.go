@@ -15,7 +15,7 @@ type ServiceClient struct {
 
 func InitServiceClient(c *config.Config) pb.SocialServiceClient {
 	// using WithInsecure() because no SSL running
-	cc, err := grpc.Dial(c.AuthSvcUrl, grpc.WithInsecure())
+	cc, err := grpc.Dial(c.SocialSvUrl, grpc.WithInsecure())
 
 	if err != nil {
 		fmt.Println("Could not connect:", err)

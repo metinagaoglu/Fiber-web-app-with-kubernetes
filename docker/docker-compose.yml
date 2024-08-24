@@ -32,3 +32,11 @@ services:
       - 3003:3000
     volumes:
       - ../services/session-service/:/go/src/app
+  social-service:
+    build:
+      context: ../services/social-service
+      dockerfile: Dockerfile
+    ports:
+      - 3004:3000
+    volumes:
+      - ../services/social-service/:/go/src/app

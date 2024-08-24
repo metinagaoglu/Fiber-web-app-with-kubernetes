@@ -8,6 +8,7 @@ service AuthService {
   rpc Register(RegisterRequest) returns (RegisterResponse) {}
   rpc Login(LoginRequest) returns (LoginResponse) {}
   rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+  rpc GetUsersByIds(GetUsersByIdsRequest) returns (GetUsersByIdsResponse) {}
 }
 
 // Register
@@ -43,4 +44,20 @@ message ValidateResponse {
   int64 status = 1;
   string error = 2;
   int64 userId = 3;
+}
+
+message GetUsersByIdsRequest {
+  repeated int64 userIds = 1;
+}
+
+message GetUsersByIdsResponse {
+  int64 status = 1;
+  string error = 2;
+  repeated User users = 3;
+}
+
+message User {
+  int64 id = 1;
+  string email = 2;
+  string password = 3;
 }

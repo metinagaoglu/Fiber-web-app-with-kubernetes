@@ -2,10 +2,12 @@ package adapters
 
 import (
 	"fmt"
+
 	amqp "github.com/rabbitmq/amqp091-go"
-	config "websocket-gateway/pkg/config"
-	logger "websocket-gateway/pkg/logger"
-	utils "websocket-gateway/pkg/utils"
+
+	"websocket-gateway/pkg/config"
+	"websocket-gateway/pkg/logger"
+	"websocket-gateway/pkg/utils"
 )
 
 var amqConn *amqp.Connection
